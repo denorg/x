@@ -30,7 +30,6 @@ export async function downloadProjects(): Promise<void> {
     });
     await cloner.status();
     await Deno.remove(join(".", "public", key, ".git"), { recursive: true });
-    break;
   }
 
   const html = `<!doctype html>
