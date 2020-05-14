@@ -31,6 +31,30 @@ export async function downloadProjects(): Promise<void> {
     await cloner.status();
     break;
   }
+
+  const html = `<!doctype html>
+<html>
+  <head>
+    <title>x.den.org.in</title>
+    <style>
+      html { font-family: sans-serif }
+      body { margin: 10vh auto; max-width: 500px }
+      ul { line-height: 2 }
+    </style>
+  </head>
+  <body>
+    <h1>x.den.org.in</h1>
+    <p>Mirror of deno.land/x for third-party Deno modules</p>
+    <ul>
+  ${
+    Object.keys(database)
+      .map((key) => `<li><a href="./${key}/README.md">${key}</a></li>`)
+      .join("\n")
+  }
+    </ul>
+  </body>
+</html>`;
+  await writeFileStr(join(".", "public", "index.html"), html);
 }
 
 downloadProjects();
