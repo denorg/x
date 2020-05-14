@@ -29,6 +29,7 @@ export async function downloadProjects(): Promise<void> {
       stdout: "inherit",
     });
     await cloner.status();
+    await Deno.remove(join(".", "public", key, ".git"), { recursive: true });
     break;
   }
 
