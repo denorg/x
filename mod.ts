@@ -1,4 +1,4 @@
-import { ensureDir } from "https://deno.land/std/fs/mod.ts";
+import { ensureDir, writeFileStr } from "https://deno.land/std/fs/mod.ts";
 import { join } from "https://deno.land/std/path/mod.ts";
 const { run } = Deno;
 
@@ -15,7 +15,10 @@ export async function downloadProjects(): Promise<void> {
       desc?: string;
     };
   } = await (await fetch(DATABASE_URL)).json();
+
   await ensureDir(join(".", "public"));
+  await writeFileStr(join(".", "public", "CNAME"), "x.den.org.in");
+
   for await (const key of Object.keys(database)) {
     const project = database[key];
     const DOWNLOAD_URL =
