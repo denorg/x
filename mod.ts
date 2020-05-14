@@ -17,7 +17,7 @@ export async function downloadProjects(): Promise<void> {
   } = await (await fetch(DATABASE_URL)).json();
 
   await ensureDir(join(".", "public"));
-  await writeFileStr(join(".", "public", "CNAME"), "x.den.org.in");
+  // await writeFileStr(join(".", "public", "CNAME"), "x.den.org.in");
 
   for await (const key of Object.keys(database)) {
     const project = database[key];
