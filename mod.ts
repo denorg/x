@@ -9,9 +9,9 @@ export async function downloadProjects(): Promise<void> {
   console.log("Fetching database", DATABASE_URL);
   const database: {
     [index: string]: {
-      type: "github" | "gitlab";
-      owner: string;
-      repo: string;
+      type: "github" | "gitlab" | "deno_std";
+      owner?: string;
+      repo?: string;
       desc?: string;
     };
   } = await (await fetch(DATABASE_URL)).json();
@@ -21,15 +21,17 @@ export async function downloadProjects(): Promise<void> {
 
   for await (const key of Object.keys(database)) {
     const project = database[key];
-    const DOWNLOAD_URL =
-      `https://${project.type}.com/${project.owner}/${project.repo}.git`;
-    console.log("Downloading package", key);
-    const cloner = run({
-      cmd: ["git", "clone", DOWNLOAD_URL, `public/${key}`],
-      stdout: "inherit",
-    });
-    await cloner.status();
-    await Deno.remove(join(".", "public", key, ".git"), { recursive: true });
+    if (project.repo && project.owner) {
+      const DOWNLOAD_URL =
+        `https://${project.type}.com/${project.owner}/${project.repo}.git`;
+      console.log("Downloading package", key);
+      const cloner = run({
+        cmd: ["git", "clone", DOWNLOAD_URL, `public/${key}`],
+        stdout: "inherit",
+      });
+      await cloner.status();
+      await Deno.remove(join(".", "public", key, ".git"), { recursive: true });
+    }
   }
 
   const html = `<!doctype html>
