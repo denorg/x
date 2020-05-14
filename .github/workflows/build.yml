@@ -17,7 +17,7 @@ jobs:
     - uses: denolib/setup-deno@master
       with:
         deno-version: 0.x
-    - run: deno run --allow-net --allow-read --allow-write --unstable mod.ts
+    - run: deno run --allow-net --allow-read --allow-write --allow-run --unstable mod.ts
     - uses: maxheld83/ghpages@v0.2.1
       name: GitHub Pages Deploy
       env:
