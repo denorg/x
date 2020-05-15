@@ -1,9 +1,19 @@
 import { ensureDir, writeFileStr } from "https://deno.land/std/fs/mod.ts";
-import { join } from "https://deno.land/std/path/mod.ts";
+import { join, extname } from "https://deno.land/std/path/mod.ts";
+import { recursiveReaddir } from "https://deno.land/x/recursive_readdir/mod.ts";
 const { run } = Deno;
 
 const DATABASE_URL =
   "https://raw.githubusercontent.com/denoland/deno_website2/master/database.json";
+const ALLOWED_FILE_TYPES = [
+  ".ts",
+  ".md",
+  ".d.ts",
+  ".js",
+  ".jsx",
+  ".tsx",
+  ".txt",
+];
 
 export async function downloadProjects(): Promise<void> {
   console.log("Fetching database", DATABASE_URL);
@@ -35,7 +45,18 @@ export async function downloadProjects(): Promise<void> {
         console.log("Error downloading package", key);
       }
       await Deno.remove(join(".", "public", key, ".git"), { recursive: true });
+      await ensureDir(join(".", "public", key));
+      const filesToDelete = (await recursiveReaddir(join(".", "public", key)))
+        .filter((file: string) => !ALLOWED_FILE_TYPES.includes(extname(file)));
+      for await (const file of filesToDelete) {
+        try {
+          await Deno.remove(file);
+        } catch (error) {
+          console.log("Unable to delete file", file);
+        }
+      }
     }
+    break;
   }
 
   const html = `<!doctype html>
