@@ -25,11 +25,15 @@ export async function downloadProjects(): Promise<void> {
       const DOWNLOAD_URL =
         `https://${project.type}.com/${project.owner}/${project.repo}.git`;
       console.log("Downloading package", key);
-      const cloner = run({
-        cmd: ["git", "clone", DOWNLOAD_URL, `public/${key}`],
-        stdout: "inherit",
-      });
-      await cloner.status();
+      try {
+        const cloner = run({
+          cmd: ["git", "clone", DOWNLOAD_URL, `public/${key}`],
+          stdout: "inherit",
+        });
+        await cloner.status();
+      } catch (error) {
+        console.log("Error downloading package", key);
+      }
       await Deno.remove(join(".", "public", key, ".git"), { recursive: true });
     }
   }
