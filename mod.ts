@@ -12,7 +12,6 @@ const ALLOWED_FILE_TYPES = [
   ".js",
   ".jsx",
   ".tsx",
-  ".txt",
 ];
 
 export async function downloadProjects(): Promise<void> {
