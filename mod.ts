@@ -56,7 +56,6 @@ export async function downloadProjects(): Promise<void> {
         }
       }
     }
-    break;
   }
 
   const html = `<!doctype html>
