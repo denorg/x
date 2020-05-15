@@ -37,7 +37,7 @@ export async function downloadProjects(): Promise<void> {
       console.log("Downloading package", key);
       try {
         const cloner = run({
-          cmd: ["git", "clone", DOWNLOAD_URL, `public/${key}`],
+          cmd: ["git", "clone", DOWNLOAD_URL, `public/${key}`, "--depth", "1"],
           stdout: "inherit",
         });
         await cloner.status();
