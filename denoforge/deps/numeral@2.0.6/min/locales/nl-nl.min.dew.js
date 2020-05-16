@@ -1,0 +1,49 @@
+import _module from "module";
+var exports = {},
+    _dewExec = false;
+export function dew() {
+  if (_dewExec) return exports;
+  _dewExec = true;
+
+  var _nodeRequire = function () {
+    var Module = _module.Module;
+
+    if (Module) {
+      var m = new Module("");
+      m.filename = import.meta.url.substr(7 + (Module._nodeModulePaths("/")[0].length > 13));
+      m.paths = Module._nodeModulePaths(m.filename.substr(0, m.filename.lastIndexOf("/")));
+      return m.require.bind(m);
+    } else {
+      return function _nodeRequire(id) {
+        var e = new Error("Cannot find module '" + id + "'");
+        e.code = "MODULE_NOT_FOUND";
+        throw e;
+      };
+    }
+  }();
+
+  !function (a, b) {
+    "function" == typeof define && define.amd ? define(["../numeral"], b) : b(exports ? _nodeRequire("../numeral") : a.numeral);
+  }(exports, function (a) {
+    a.register("locale", "nl-nl", {
+      delimiters: {
+        thousands: ".",
+        decimal: ","
+      },
+      abbreviations: {
+        thousand: "k",
+        million: "mln",
+        billion: "mrd",
+        trillion: "bln"
+      },
+      ordinal: function (a) {
+        var b = a % 100;
+        return 0 !== a && 1 >= b || 8 === b || b >= 20 ? "ste" : "de";
+      },
+      currency: {
+        symbol: "€ "
+      }
+    });
+  });
+  return exports;
+}

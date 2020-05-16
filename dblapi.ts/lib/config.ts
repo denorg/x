@@ -1,0 +1,1 @@
+export let apiUrl: string = 'https://top.gg/api';
